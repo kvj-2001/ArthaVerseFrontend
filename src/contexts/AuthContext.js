@@ -35,15 +35,14 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      // Send credentials as application/x-www-form-urlencoded to avoid OPTIONS preflight delays
-      const payload = new URLSearchParams(credentials).toString();
-      const response = await axios.post('/auth/login', payload, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+      // Send credentials as JSON to match backend expectations
+      const response = await axios.post('/auth/login', credentials);
       const { token, user: userData } = response.data;
-      
+
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(userData));
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      
+
       setUser(userData);
       toast.success('Login successful!');
       return { success: true };
@@ -56,9 +55,8 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      // Send registration data as application/x-www-form-urlencoded to avoid OPTIONS preflight delays
-      const payload = new URLSearchParams(userData).toString();
-      await axios.post('/auth/register', payload, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+      // Send registration data as JSON to match backend expectations
+      await axios.post('/auth/register', userData);
       toast.success('Registration successful! Please check your email for verification.');
       return { success: true };
     } catch (error) {
