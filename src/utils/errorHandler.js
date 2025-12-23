@@ -4,22 +4,25 @@
 export const getErrorMessage = (error, defaultMessage = 'An error occurred') => {
   if (error.response) {
     // Server responded with error status
-    const { data } = error.response;
+    const { data } = error.response || {};
     
-    // Check for validation errors first
-    if (data.validationErrors) {
+    // Check for validation errors first (safe check)
+    if (data && data.validationErrors) {
       const validationMessages = Object.values(data.validationErrors);
       return validationMessages.length > 0 ? validationMessages.join(', ') : defaultMessage;
     }
     
     // Check for general error message
-    if (data.message) {
+    if (data && data.message) {
       return data.message;
     }
     
-    // Fallback to status text
+    // Fallback to status text or status code
     if (error.response.statusText) {
       return error.response.statusText;
+    }
+    if (error.response.status) {
+      return `Request failed with status ${error.response.status}`;
     }
   } else if (error.request) {
     // Request was made but no response received
