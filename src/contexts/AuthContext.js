@@ -16,7 +16,7 @@ export const useAuth = () => {
 };
 
 // Configure axios defaults
-axios.defaults.baseURL = 'https://arthaversebackend-production.up.railway.app/api';
+axios.defaults.baseURL = 'https://arthaversebackend.onrender.com';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -95,3 +95,4 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
